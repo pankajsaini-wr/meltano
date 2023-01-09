@@ -541,6 +541,37 @@ meltano config meltano set state_backend.s3.aws_secret_access_key "somesecretacc
 export MELTANO_STATE_BACKEND_S3_AWS_SECRET_ACCESS_KEY="somesecretaccesskey"
 ```
 
+### <a name="state-backend-uri"></a>`state_backend.s3.aws_session_token`
+
+- [Environment variable](/guide/configuration#configuring-settings): `MELTANO_STATE_AWS_SESSION_TOKEN`
+- Default: None
+
+The AWS secret access key to use when authenticating to S3.
+
+#### How to use
+
+```bash
+meltano config meltano set state_backend.s3.aws_session_token "somesessiontoken""
+
+export MELTANO_STATE_BACKEND_S3_AWS_SESSION_TOKEN="somesessiontoken"
+```
+
+### <a name="state-backend-uri"></a>`state_backend.s3.aws_profile`
+
+- [Environment variable](/guide/configuration#configuring-settings): `MELTANO_STATE_AWS_PROFILE`
+- Default: None
+
+The AWS secret access key to use when authenticating to S3.
+
+#### How to use
+
+```bash
+meltano config meltano set state_backend.s3.aws_profile "someawsprofile""
+
+export MELTANO_STATE_BACKEND_S3_AWS_PROFILE="someawsprofile"
+```
+
+
 ### <a name="state-backend-uri"></a>`state_backend.s3.endpoint_url`
 
 - [Environment variable](/guide/configuration#configuring-settings): `MELTANO_STATE_AWS_ENDPOINT_URL`
