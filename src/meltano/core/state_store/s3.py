@@ -18,6 +18,8 @@ class S3StateStoreManager(BaseFilesystemStateStoreManager):
         self,
         aws_access_key_id: str | None = None,
         aws_secret_access_key: str | None = None,
+        aws_session_token: str | None = None,
+        aws_profile: str | None = None,
         bucket: str | None = None,
         prefix: str | None = None,
         endpoint_url: str | None = None,
@@ -36,6 +38,8 @@ class S3StateStoreManager(BaseFilesystemStateStoreManager):
         super().__init__(**kwargs)
         self.aws_access_key_id = aws_access_key_id or self.parsed.username
         self.aws_secret_access_key = aws_secret_access_key or self.parsed.password
+        self.aws_session_token = aws_session_token
+        self.aws_profile = aws_profile
         self.bucket = bucket or self.parsed.hostname
         self.prefix = prefix or self.parsed.path
         self.endpoint_url = endpoint_url
@@ -68,22 +72,19 @@ class S3StateStoreManager(BaseFilesystemStateStoreManager):
             InvalidStateBackendConfigurationException: when configured AWS settings are invalid.
         """
         if not self._client:
+            from boto3 import Session
             if self.aws_secret_access_key and self.aws_access_key_id:
-                from boto3 import Session
-
                 session = Session(
                     aws_access_key_id=self.aws_access_key_id,
                     aws_secret_access_key=self.aws_secret_access_key,
+                    aws_session_token=self.aws_session_token,
                 )
-                self._client = session.client("s3", endpoint_url=self.endpoint_url)
-            elif self.aws_secret_access_key and not self.aws_access_key_id:
-                raise InvalidStateBackendConfigurationException(
-                    "AWS secret access key configured, but not AWS access key ID."
+            else:
+                session = Session(
+                    profile_name=self.aws_profile,
                 )
-            elif self.aws_access_key_id and not self.aws_secret_access_key:
-                raise InvalidStateBackendConfigurationException(
-                    "AWS access key ID configured, but no AWS secret access key."
-                )
+            # Error handing for checking the provided auth config is not required because by default boto3 will use the default aws profile
+            self._client = session.client("s3", endpoint_url=self.endpoint_url)
         return self._client
 
     @property

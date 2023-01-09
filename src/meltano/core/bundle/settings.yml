@@ -61,6 +61,11 @@ settings:
 - name: state_backend.s3.aws_secret_access_key
   kind: password
   env_specific: true
+- name: state_backend.s3.aws_session_token
+  kind: password
+  env_specific: true
+- name: state_backend.s3.aws_profile
+  env_specific: true
 - name: state_backend.s3.endpoint_url
   env_specific: true
 
